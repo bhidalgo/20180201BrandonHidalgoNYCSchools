@@ -24,9 +24,6 @@ public class BoroughPresenterTest {
     @Mock
     private BoroughView view;
 
-    @Mock
-    private List<Borough> list;
-
     @Before
     public void setUp() {
         presenter = new BoroughPresenterImpl(view);
