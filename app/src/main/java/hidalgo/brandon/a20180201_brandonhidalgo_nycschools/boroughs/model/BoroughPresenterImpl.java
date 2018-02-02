@@ -1,5 +1,6 @@
 package hidalgo.brandon.a20180201_brandonhidalgo_nycschools.boroughs.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.boroughs.Borough;
@@ -17,7 +18,42 @@ public class BoroughPresenterImpl implements BoroughPresenter{
     }
 
     @Override
-    public List<Borough> getBoroughs() {
-        return null;
+    public void getBoroughs() {
+        int numberOfBoroughs = 5;
+
+        List<Borough> result = new ArrayList<>();
+
+        Borough currentBorough;
+
+        for(int i = 0; i < numberOfBoroughs; i++) {
+            switch (i) {
+                case 0:
+                    currentBorough = new Borough("Bronx");
+
+                    break;
+                case 1:
+                    currentBorough = new Borough("Brooklyn");
+
+                    break;
+                case 2:
+                    currentBorough = new Borough("Manhattan");
+
+                    break;
+                case 3:
+                    currentBorough = new Borough("Queens");
+
+                    break;
+                case 4:
+                    currentBorough = new Borough("Staten Island");
+
+                    break;
+                default:
+                    currentBorough = new Borough("Borough Name");
+                    break;
+            }
+            result.add(currentBorough);
+        }
+
+        mView.displayBoroughsList(result);
     }
 }

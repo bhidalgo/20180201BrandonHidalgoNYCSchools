@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">20180201-BrandonHidalgo-NYCSchools</string>
+    <string name="borough_image_view_content_desc">photo of borough</string>
 </resources>
