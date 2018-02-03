@@ -17,70 +17,37 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.schools.model.SchoolP
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.schools.presenter.SchoolPresenter;
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.schools.view.SchoolView;
 
+/**
+ * An Activity display a school's SAT scores and description
+ */
 public class SchoolActivity extends AppCompatActivity implements SchoolView{
     private String mSchoolName;
 
     private SchoolActivityBinding binding;
 
+    private SchoolPresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mPresenter = new SchoolPresenterImpl(this);
 
         mSchoolName = getIntent().getStringExtra("school");
 
         binding = DataBindingUtil.setContentView(this, R.layout.school_activity);
 
         setTitle("About");
+
+        mPresenter.showSchoolInfo(mSchoolName);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        GetSchoolTask task = new GetSchoolTask(this, new SchoolPresenterImpl(this));
-
-        task.execute(mSchoolName);
-    }
-
+    /**
+     * Sets the school parameter of the activity binding class.
+     * @param school the school to be displayed
+     */
     @Override
     public void displaySchoolInfo(SchoolEntity school) {
         binding.setSchool(school);
-    }
-
-    private static class GetSchoolTask extends AsyncTask<String, Void, SchoolEntity> {
-        ProgressDialog dialog;
-
-        WeakReference<Context> contextReference;
-
-        WeakReference<SchoolPresenter> presenterReference;
-
-        GetSchoolTask(Context context, SchoolPresenter presenter) {
-            contextReference = new WeakReference<>(context);
-
-            presenterReference = new WeakReference<>(presenter);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            dialog = ProgressDialog.show(contextReference.get(), "School Database", "Loading school information...");
-        }
-
-        @Override
-        protected SchoolEntity doInBackground(String... strings) {
-            return SchoolDatabase.getDatabase(contextReference.get())
-                    .schoolDao()
-                    .getByName(strings[0]);
-        }
-
-        @Override
-        protected void onPostExecute(SchoolEntity schoolEntity) {
-            super.onPostExecute(schoolEntity);
-
-            dialog.dismiss();
-
-            presenterReference.get().showSchoolInfo(schoolEntity);
-        }
     }
 }
