@@ -57,23 +57,23 @@ public class BoroughRecyclerViewAdapter extends RecyclerView.Adapter {
         int photoResourceId = 0;
 
         switch (currentBorough.getName()) {
-            case "Bronx":
+            case "BRONX    ":
                 photoResourceId = R.drawable.bronx;
 
                 break;
-            case "Brooklyn":
+            case "BROOKLYN ":
                 photoResourceId = R.drawable.brooklyn;
 
                 break;
-            case "Manhattan":
+            case "MANHATTAN":
                 photoResourceId = R.drawable.manhattan;
 
                 break;
-            case "Queens":
+            case "QUEENS   ":
                 photoResourceId = R.drawable.queens;
 
                 break;
-            case "Staten Island":
+            case "STATEN IS":
                 photoResourceId = R.drawable.staten_island;
 
                 break;

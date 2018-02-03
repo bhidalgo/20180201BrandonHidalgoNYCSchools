@@ -28,23 +28,23 @@ public class BoroughPresenterImpl implements BoroughPresenter{
         for(int i = 0; i < numberOfBoroughs; i++) {
             switch (i) {
                 case 0:
-                    currentBorough = new Borough("Bronx");
+                    currentBorough = new Borough("BRONX    ");
 
                     break;
                 case 1:
-                    currentBorough = new Borough("Brooklyn");
+                    currentBorough = new Borough("BROOKLYN ");
 
                     break;
                 case 2:
-                    currentBorough = new Borough("Manhattan");
+                    currentBorough = new Borough("MANHATTAN");
 
                     break;
                 case 3:
-                    currentBorough = new Borough("Queens");
+                    currentBorough = new Borough("QUEENS   ");
 
                     break;
                 case 4:
-                    currentBorough = new Borough("Staten Island");
+                    currentBorough = new Borough("STATEN IS");
 
                     break;
                 default:
