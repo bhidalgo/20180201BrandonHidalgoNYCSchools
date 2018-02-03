@@ -13,18 +13,27 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.boroughs.view.Borough
 public class BoroughPresenterImpl implements BoroughPresenter{
     private BoroughView mView;
 
+    /**
+     * Constructor
+     * @param view the view to be associated with this instance.
+     */
     public BoroughPresenterImpl(BoroughView view) {
         mView = view;
     }
 
+    /**
+     * Builds a list of Boroughs to pass to the view;
+     */
     @Override
     public void getBoroughs() {
+        //Bronx, Brooklyn, Manhattan, Queens, Staten Island
         int numberOfBoroughs = 5;
 
         List<Borough> result = new ArrayList<>();
 
         Borough currentBorough;
 
+        //Build the list
         for(int i = 0; i < numberOfBoroughs; i++) {
             switch (i) {
                 case 0:
@@ -54,9 +63,14 @@ public class BoroughPresenterImpl implements BoroughPresenter{
             result.add(currentBorough);
         }
 
+        //Pass the list to the view
         mView.displayBoroughsList(result);
     }
 
+    /**
+     * Instructs the view of this instance to start the next activity
+     * @param borough the borough to load
+     */
     @Override
     public void loadBorough(String borough) {
         mView.startSchoolListActivity(borough);

@@ -35,4 +35,13 @@ public class BoroughPresenterTest {
 
         verify(view).displayBoroughsList(ArgumentMatchers.<Borough>anyList());
     }
+
+    @Test
+    public void testLoadBorough() {
+        String testBoroughToLoad = "MANHATTAN";
+
+        presenter.loadBorough(testBoroughToLoad);
+
+        verify(view).startSchoolListActivity(testBoroughToLoad);
+    }
 }
