@@ -2,10 +2,16 @@ package hidalgo.brandon.a20180201_brandonhidalgo_nycschools.data_retrieval;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,6 +26,7 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.dal.retrofit.School;
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.dal.retrofit.Scores;
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.dal.room.SchoolDatabase;
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.dal.room.SchoolEntity;
+import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.databinding.DataRetrievalActivityBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,16 +47,28 @@ public class DataRetrievalActivity extends AppCompatActivity {
 
     private List<Scores> scoreList;
 
+    private TextView titleTextView;
+
+    private TextView subtitleTextView;
+
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.data_retrieval_activity);
+        DataRetrievalActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.data_retrieval_activity);
+
+        titleTextView = binding.title;
+
+        subtitleTextView = binding.subtitle;
+
+        progressBar = binding.progressBar;
 
         if (databaseLoaded())
             startNextActivity();
         else
-            startFetchingData();
+            startFetchingData(0);
     }
 
     private boolean databaseLoaded() {
@@ -58,55 +77,84 @@ public class DataRetrievalActivity extends AppCompatActivity {
         return preference.getInt(SHARED_PREF_KEY, 0) == 1;
     }
 
+    private boolean hasInternetConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork;
+
+        if(connectivityManager != null) {
+            activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        }
+
+        return false;
+    }
+
     /**
      * Starts the fetching process by creating our client, and enqueuing the first and last call to the NYC Schools Database
      */
-    private void startFetchingData() {
-        //Build Retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://data.cityofnewyork.us/resource/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    private void startFetchingData(final Integer failureCount) {
+        if(hasInternetConnection()) {
+            setStatusTextView("Getting School Data", "", true);
 
-        //Get our client
-        client = retrofit.create(NYCSchoolsClient.class);
+            //Build Retrofit
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://data.cityofnewyork.us/resource/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
-        //Our first call is to get the schools data
-        Call<List<School>> schoolCall = client.getSchoolsData();
+            //Get our client
+            client = retrofit.create(NYCSchoolsClient.class);
 
-        //Enqueue the first call
-        schoolCall.enqueue(new Callback<List<School>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<School>> call, @NonNull Response<List<School>> response) {
-                if (response.code() == 200) {
-                    //Populate the list of schools
-                    schoolList = response.body();
+            //Our first call is to get the schools data
+            Call<List<School>> schoolCall = client.getSchoolsData();
 
-                    //Sort the school list
-                    if (schoolList != null)
-                        Collections.sort(schoolList);
+            //Enqueue the first call
+            schoolCall.enqueue(new Callback<List<School>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<School>> call, @NonNull Response<List<School>> response) {
+                    if (response.code() == 200) {
+                        //Populate the list of schools
+                        schoolList = response.body();
 
-                    //Start the second and last call
-                    getSchoolScores();
-                } else {
-                    //Show an error message
-                    Toast.makeText(DataRetrievalActivity.this, "Failed to get SchoolEntity data :(", Toast.LENGTH_SHORT).show();
+                        //Sort the school list
+                        if (schoolList != null)
+                            Collections.sort(schoolList);
 
-                    Log.e(LOG_TAG, "Something went wrong getting school data error code: " + response.code());
+                        //Start the second and last call
+                        getSchoolScores(0);
+                    } else {
+                        //Show an error message
+                        Toast.makeText(DataRetrievalActivity.this, "Failed to get SchoolEntity data :(", Toast.LENGTH_SHORT).show();
+
+                        Log.e(LOG_TAG, "Something went wrong getting school data error code: " + response.code());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<List<School>> call, @NonNull Throwable t) {
-                Log.e(LOG_TAG, t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(@NonNull Call<List<School>> call, @NonNull Throwable t) {
+                    Log.e(LOG_TAG, t.getMessage());
+
+                    if(failureCount < 3) {
+                        setStatusTextView("Oops", "Something went wrong...trying again.", true);
+
+                        startFetchingData(failureCount + 1);
+                    }
+                    else
+                        setStatusTextView("Couldn't get school data", "Please Try again later.", true);
+                }
+            });
+        }
+        else
+            setStatusTextView("Cannot access network", "Make sure you are connected and that permissions are granted.", false);
     }
 
     /**
      * Enqueues the second and last call to the NYC Schools Database
      */
-    private void getSchoolScores() {
+    private void getSchoolScores(final Integer failureCount) {
+        setStatusTextView("Getting SAT Scores Data", "", true);
         //Create the second call
         Call<List<Scores>> scoresCall = client.getSchoolsScores();
 
@@ -129,7 +177,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
                     startNextActivity();
                 } else {
                     //Show an error message
-                    Toast.makeText(DataRetrievalActivity.this, "Failed to get SchoolEntity scores :(", Toast.LENGTH_SHORT).show();
+                    setStatusTextView("Oops", "Something went wrong...trying again.", true);
 
                     Log.e(LOG_TAG, "Something went wrong getting school scores error code: " + response.code());
                 }
@@ -138,6 +186,14 @@ public class DataRetrievalActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<List<Scores>> call, @NonNull Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
+
+                if(failureCount < 3) {
+                    setStatusTextView("Oops", "Something went wrong...trying again.", true);
+
+                    getSchoolScores(failureCount + 1);
+                }
+                else
+                    setStatusTextView("Could not get school scores.", "Please try again later.", true);
             }
         });
     }
@@ -146,6 +202,8 @@ public class DataRetrievalActivity extends AppCompatActivity {
      * Builds a list of SchoolEntities and passes it to our Room Persistent db.
      */
     private void loadDatabase() {
+        setStatusTextView("Building your local database", "", true);
+
         //Initialize the list
         List<SchoolEntity> schoolsForDatabase = new ArrayList<>();
 
@@ -223,7 +281,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
         //Confirm whether the operation was successful
         String resultString = result.size() > 0 ? "Successfully loaded the database!" : "Failed loading the database. Please try again.";
 
-        Toast.makeText(this, resultString, Toast.LENGTH_SHORT).show();
+        setStatusTextView(resultString, " ", false);
     }
 
     /**
@@ -237,6 +295,17 @@ public class DataRetrievalActivity extends AppCompatActivity {
         editor.putInt(SHARED_PREF_KEY, 1);
 
         editor.apply();
+    }
+
+    private void setStatusTextView(String title, String subtitle, boolean inProgress) {
+        if(!title.isEmpty())
+            titleTextView.setText(title);
+
+        if(!subtitle.isEmpty())
+            subtitleTextView.setText(subtitle);
+
+        if(!inProgress)
+            progressBar.setVisibility(View.GONE);
     }
 
     /**
