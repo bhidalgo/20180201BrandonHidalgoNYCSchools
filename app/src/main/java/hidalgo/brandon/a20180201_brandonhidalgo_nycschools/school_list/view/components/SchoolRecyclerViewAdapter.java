@@ -27,15 +27,15 @@ public class SchoolRecyclerViewAdapter extends RecyclerView.Adapter {
 
     /**
      * Constructor
+     *
      * @param context the OnSchoolSelectedListener to be attached
-     * @param list the data to be used by the adapter
+     * @param list    the data to be used by the adapter
      */
     SchoolRecyclerViewAdapter(Context context, List<SchoolEntity> list) {
         //Try to initialize the listener
         try {
             listener = (OnSchoolSelectedListener) context;
-        }
-        catch(ClassCastException e) {
+        } catch (ClassCastException e) {
             Log.e("SchoolRVAdapter", "Context must implement OnSchoolSelectedListener");
         }
 

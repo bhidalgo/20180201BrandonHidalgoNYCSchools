@@ -49,6 +49,7 @@ public class BoroughsActivity extends AppCompatActivity implements BoroughView, 
 
     /**
      * Configures the RecyclerView to display a list of Boroughs.
+     *
      * @param list
      */
     @Override
@@ -62,6 +63,7 @@ public class BoroughsActivity extends AppCompatActivity implements BoroughView, 
 
     /**
      * Starts a SchoolListActivity of the given borough.
+     *
      * @param borough the borough to display in the next activity
      */
     @Override
@@ -76,6 +78,7 @@ public class BoroughsActivity extends AppCompatActivity implements BoroughView, 
 
     /**
      * Interface implementation for handling the click of a Borough in BoroughRecyclerViewAdapter.
+     *
      * @param borough the borough selected
      */
     @Override

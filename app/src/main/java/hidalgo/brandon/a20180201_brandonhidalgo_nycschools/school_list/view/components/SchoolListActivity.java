@@ -19,7 +19,7 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.school_list.presenter
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.school_list.view.SchoolListView;
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.schools.view.components.SchoolActivity;
 
-public class SchoolListActivity extends AppCompatActivity implements SchoolListView, SchoolRecyclerViewAdapter.OnSchoolSelectedListener{
+public class SchoolListActivity extends AppCompatActivity implements SchoolListView, SchoolRecyclerViewAdapter.OnSchoolSelectedListener {
 
     private ImageView mImageView;
 
@@ -50,6 +50,7 @@ public class SchoolListActivity extends AppCompatActivity implements SchoolListV
 
     /**
      * Configures the RecyclerView
+     *
      * @param list the data to be displayed in the RecyclerView
      */
     @Override
@@ -65,6 +66,7 @@ public class SchoolListActivity extends AppCompatActivity implements SchoolListV
 
     /**
      * Sets the image drawable for the header ImageView
+     *
      * @param imageResourceId the resource ID of the image to be used
      */
     @Override
@@ -74,6 +76,7 @@ public class SchoolListActivity extends AppCompatActivity implements SchoolListV
 
     /**
      * Starts the SchoolActivity of the selected school
+     *
      * @param schoolName the name of the selected school
      */
     @Override

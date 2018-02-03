@@ -32,15 +32,15 @@ public class BoroughRecyclerViewAdapter extends RecyclerView.Adapter {
 
     /**
      * Constructor
+     *
      * @param context the context instantiating this adapter
-     * @param list the list of Boroughs to display
+     * @param list    the list of Boroughs to display
      */
     BoroughRecyclerViewAdapter(Context context, List<Borough> list) {
         //Initialize our listener
         try {
             listener = (OnBoroughItemSelectedListener) context;
-        }
-        catch(ClassCastException e) {
+        } catch (ClassCastException e) {
             Log.e("BoroughRVAdapter", "Context must implement OnBoroughItemSelectedListener");
         }
 
@@ -93,6 +93,7 @@ public class BoroughRecyclerViewAdapter extends RecyclerView.Adapter {
 
     /**
      * Gets the resource ID of the Drawable to use for the header image view.
+     *
      * @param boroughName the name of the borough
      * @return int
      */

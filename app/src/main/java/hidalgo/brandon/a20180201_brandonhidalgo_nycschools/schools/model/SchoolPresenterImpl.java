@@ -13,20 +13,20 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.schools.view.SchoolVi
 /**
  * The MVP Model for the School package
  */
-public class SchoolPresenterImpl implements SchoolPresenter{
+public class SchoolPresenterImpl implements SchoolPresenter {
     private Context mContext;
 
     private SchoolView mView;
 
     /**
      * Constructor
+     *
      * @param view the SchoolView to be associated with this presenter
      */
-    public SchoolPresenterImpl(SchoolView view){
+    public SchoolPresenterImpl(SchoolView view) {
         try {
             mContext = (Context) view;
-        }
-        catch(ClassCastException e) {
+        } catch (ClassCastException e) {
             throw new IllegalArgumentException("SchoolView must extend Context.");
         }
 
@@ -35,6 +35,7 @@ public class SchoolPresenterImpl implements SchoolPresenter{
 
     /**
      * Instructs the view to display school information
+     *
      * @param school the school to be displayed
      */
     @Override
@@ -54,8 +55,9 @@ public class SchoolPresenterImpl implements SchoolPresenter{
 
         /**
          * Constructor
+         *
          * @param context The context who's reference will be held
-         * @param view The school view which will display the results
+         * @param view    The school view which will display the results
          */
         GetSchoolTask(Context context, SchoolView view) {
             contextReference = new WeakReference<>(context);

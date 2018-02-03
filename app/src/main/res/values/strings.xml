@@ -1,7 +1,14 @@
 <resources>
     <string name="app_name">NYC Schools</string>
-    <string name="borough_image_view_content_desc">photo of borough</string>
+
+    <!-- Data Retrieval -->
     <string name="grabbing_data">Grabbing data…</string>
     <string name="grabbing_data_subtitle">Don\'t worry, this will only happen once.</string>
+
+    <!-- Boroughs -->
     <string name="borough_title">Choose a Borough</string>
+    <string name="borough_image_view_content_desc">photo of borough</string>
+
+    <!-- Schools -->
+    <string name="school_title">About</string>
 </resources>

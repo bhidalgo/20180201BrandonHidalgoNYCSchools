@@ -15,28 +15,27 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.school_list.view.Scho
 /**
  * The MVP Model for SchoolList
  */
-public class SchoolListPresenterImpl implements SchoolListPresenter{
+public class SchoolListPresenterImpl implements SchoolListPresenter {
     private Context mContext;
 
     private SchoolListView mView;
 
     /**
      * Constructor
-     *
      */
     public SchoolListPresenterImpl(SchoolListView view) {
         mView = view;
 
         try {
             mContext = (Context) view;
-        }
-        catch (ClassCastException e) {
-           throw new IllegalArgumentException("SchoolListView must extends Context class.");
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("SchoolListView must extends Context class.");
         }
     }
 
     /**
      * Starts an ASync task to read a list of schools from the db
+     *
      * @param boroughName the name of the borough
      */
     @Override
@@ -48,6 +47,7 @@ public class SchoolListPresenterImpl implements SchoolListPresenter{
 
     /**
      * Instructs to view to show the header image by passing it a resource id.
+     *
      * @param boroughName the name of the borough who's image will be used
      */
     @Override
@@ -90,8 +90,9 @@ public class SchoolListPresenterImpl implements SchoolListPresenter{
 
         /**
          * Construct
+         *
          * @param context a Context who's weak reference will be held
-         * @param view a SchoolListPresenter who's waek reference will be head
+         * @param view    a SchoolListPresenter who's waek reference will be head
          */
         GetSchoolListTask(Context context, SchoolListView view) {
             contextReference = new WeakReference<>(context);

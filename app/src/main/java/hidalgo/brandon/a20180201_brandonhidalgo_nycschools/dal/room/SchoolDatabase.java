@@ -16,12 +16,13 @@ public abstract class SchoolDatabase extends RoomDatabase {
 
     /**
      * Returns the Singleton instance of the database
+     *
      * @param context
      * @return
      */
     public static SchoolDatabase getDatabase(Context context) {
         //initialize the database if it is not initialized
-        if(db == null) {
+        if (db == null) {
             db = Room.databaseBuilder(context,
                     SchoolDatabase.class, "schools")
                     .allowMainThreadQueries()

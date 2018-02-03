@@ -46,7 +46,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
 
         setContentView(R.layout.data_retrieval_activity);
 
-        if(databaseLoaded())
+        if (databaseLoaded())
             startNextActivity();
         else
             startFetchingData();
@@ -78,18 +78,17 @@ public class DataRetrievalActivity extends AppCompatActivity {
         schoolCall.enqueue(new Callback<List<School>>() {
             @Override
             public void onResponse(@NonNull Call<List<School>> call, @NonNull Response<List<School>> response) {
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     //Populate the list of schools
                     schoolList = response.body();
 
                     //Sort the school list
-                    if(schoolList != null)
+                    if (schoolList != null)
                         Collections.sort(schoolList);
 
                     //Start the second and last call
                     getSchoolScores();
-                }
-                else {
+                } else {
                     //Show an error message
                     Toast.makeText(DataRetrievalActivity.this, "Failed to get SchoolEntity data :(", Toast.LENGTH_SHORT).show();
 
@@ -120,7 +119,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
                     scoreList = response.body();
 
                     //Sort the list to match the school list
-                    if(scoreList != null)
+                    if (scoreList != null)
                         Collections.sort(scoreList);
 
                     loadDatabase();
@@ -128,8 +127,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
                     setDatabaseLoaded();
 
                     startNextActivity();
-                }
-                else {
+                } else {
                     //Show an error message
                     Toast.makeText(DataRetrievalActivity.this, "Failed to get SchoolEntity scores :(", Toast.LENGTH_SHORT).show();
 
@@ -155,23 +153,22 @@ public class DataRetrievalActivity extends AppCompatActivity {
         HashMap<String, Scores> scoresHashMap = new HashMap<>();
 
         //Traverse the school list
-        for(int i = 0; i < schoolList.size(); i++) {
+        for (int i = 0; i < schoolList.size(); i++) {
             School currentSchool = schoolList.get(i);
 
             //Find the current school's score
             Scores currentSchoolScores = null;
 
             //If it's in the HashMap, no need to traverse the score list, just return from the map
-            if(scoresHashMap.containsKey(currentSchool.getSchoolDatabaseNumber())) {
+            if (scoresHashMap.containsKey(currentSchool.getSchoolDatabaseNumber())) {
                 currentSchoolScores = scoresHashMap.get(currentSchool.getSchoolDatabaseNumber());
-            }
-            else {
+            } else {
                 //Traverse the score list, removing the current score with each step from the list since
                 //it will be stored in the HashMap for later use anyways
-                for(int j = 0; j < scoreList.size(); j++) {
+                for (int j = 0; j < scoreList.size(); j++) {
                     Scores currentScore = scoreList.get(j);
 
-                    if(currentSchool.getSchoolDatabaseNumber().equals(currentScore.getSchoolDatabaseNumber())) {
+                    if (currentSchool.getSchoolDatabaseNumber().equals(currentScore.getSchoolDatabaseNumber())) {
                         //Set the current school score
                         currentSchoolScores = currentScore;
 
@@ -179,8 +176,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
                         scoreList.remove(currentScore);
 
                         break;
-                    }
-                    else {
+                    } else {
                         //Store the score in the HashMap for easier retrieval
                         scoresHashMap.put(currentScore.getSchoolDatabaseNumber(), currentScore);
 
@@ -194,7 +190,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
             SchoolEntity newSchoolEntity;
 
             //Some schools did not report SAT scores in 2012.
-            if(currentSchoolScores != null) {
+            if (currentSchoolScores != null) {
                 newSchoolEntity = new SchoolEntity(
                         currentSchool.getSchoolDatabaseNumber(),
                         currentSchool.getName(),
@@ -204,8 +200,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
                         currentSchoolScores.getWritingScore(),
                         currentSchoolScores.getReadingScore()
                 );
-            }
-            else {
+            } else {
                 newSchoolEntity = new SchoolEntity(
                         currentSchool.getSchoolDatabaseNumber(),
                         currentSchool.getName(),

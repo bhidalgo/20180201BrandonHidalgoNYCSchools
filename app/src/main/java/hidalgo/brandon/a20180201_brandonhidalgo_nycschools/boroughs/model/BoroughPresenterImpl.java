@@ -10,11 +10,12 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.boroughs.view.Borough
 /**
  * A class for building a List of Boroughs
  */
-public class BoroughPresenterImpl implements BoroughPresenter{
+public class BoroughPresenterImpl implements BoroughPresenter {
     private BoroughView mView;
 
     /**
      * Constructor
+     *
      * @param view the view to be associated with this instance.
      */
     public BoroughPresenterImpl(BoroughView view) {
@@ -34,7 +35,7 @@ public class BoroughPresenterImpl implements BoroughPresenter{
         Borough currentBorough;
 
         //Build the list
-        for(int i = 0; i < numberOfBoroughs; i++) {
+        for (int i = 0; i < numberOfBoroughs; i++) {
             switch (i) {
                 case 0:
                     currentBorough = new Borough("BRONX    ");
@@ -69,6 +70,7 @@ public class BoroughPresenterImpl implements BoroughPresenter{
 
     /**
      * Instructs the view of this instance to start the next activity
+     *
      * @param borough the borough to load
      */
     @Override
