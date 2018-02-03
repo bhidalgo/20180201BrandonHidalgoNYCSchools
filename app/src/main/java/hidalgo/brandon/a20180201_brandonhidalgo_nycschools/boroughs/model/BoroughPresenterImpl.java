@@ -56,4 +56,9 @@ public class BoroughPresenterImpl implements BoroughPresenter{
 
         mView.displayBoroughsList(result);
     }
+
+    @Override
+    public void loadBorough(String borough) {
+        mView.startSchoolListActivity(borough);
+    }
 }

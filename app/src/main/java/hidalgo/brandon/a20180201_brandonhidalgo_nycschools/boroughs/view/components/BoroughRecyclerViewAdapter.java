@@ -1,7 +1,9 @@
 package hidalgo.brandon.a20180201_brandonhidalgo_nycschools.boroughs.view.components;
 
+import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,20 @@ public class BoroughRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<Borough> mList;
 
+    private OnBoroughItemSelectedListener listener;
+
+    public interface OnBoroughItemSelectedListener {
+        void receiveBoroughSelected(String borough);
+    }
+
     public BoroughRecyclerViewAdapter(Context context, List<Borough> list) {
+        try {
+            listener = (OnBoroughItemSelectedListener) context;
+        }
+        catch(ClassCastException e) {
+            Log.e("BoroughRVAdapter", "Context must implement OnBoroughItemSelectedListener");
+        }
+
         mContext = context;
 
         mList = list;
@@ -46,7 +61,14 @@ public class BoroughRecyclerViewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         View itemView = holder.itemView;
 
-        Borough currentBorough = mList.get(position);
+        final Borough currentBorough = mList.get(position);
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.receiveBoroughSelected(currentBorough.getName());
+            }
+        });
 
         TextView textView = itemView.findViewById(R.id.textView);
 
