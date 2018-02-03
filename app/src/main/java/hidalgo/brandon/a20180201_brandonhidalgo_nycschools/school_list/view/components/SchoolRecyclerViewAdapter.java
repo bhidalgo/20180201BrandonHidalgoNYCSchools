@@ -2,6 +2,7 @@ package hidalgo.brandon.a20180201_brandonhidalgo_nycschools.school_list.view.com
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,20 @@ public class SchoolRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<SchoolEntity> mList;
 
+    private OnSchoolSelectedListener listener;
+
+    public interface OnSchoolSelectedListener {
+        void startSchoolActivity(String schoolName);
+    }
+
     public SchoolRecyclerViewAdapter(Context context, List<SchoolEntity> list) {
+        try {
+            listener = (OnSchoolSelectedListener) context;
+        }
+        catch(ClassCastException e) {
+            Log.e("SchoolRVAdapter", "Context must implement OnSchoolSelectedListener");
+        }
+
         mContext = context;
 
         mList = list;
@@ -37,7 +51,14 @@ public class SchoolRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        SchoolEntity currentSchool = mList.get(position);
+        final SchoolEntity currentSchool = mList.get(position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.startSchoolActivity(currentSchool.getName());
+            }
+        });
 
         TextView textView = holder.itemView.findViewById(R.id.schoolTextView);
 

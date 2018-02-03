@@ -1,15 +1,7 @@
 package hidalgo.brandon.a20180201_brandonhidalgo_nycschools.schools.presenter;
 
-import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.schools.view.SchoolView;
+import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.dal.room.SchoolEntity;
 
 public interface SchoolPresenter {
-    void showSchoolName(String schoolName);
-
-    void showSchoolMathScores(String schoolName);
-
-    void showSchoolReadingScores(String schoolName);
-
-    void showSchoolDescription(String schoolName);
-
-    SchoolPresenter makePresenter(SchoolView view);
+    void showSchoolInfo(SchoolEntity school);
 }

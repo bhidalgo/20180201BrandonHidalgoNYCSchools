@@ -1,6 +1,7 @@
 package hidalgo.brandon.a20180201_brandonhidalgo_nycschools.school_list.view.components;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -23,8 +24,9 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.databinding.SchoolLis
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.school_list.model.SchoolListPresenterImpl;
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.school_list.presenter.SchoolListPresenter;
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.school_list.view.SchoolListView;
+import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.schools.view.components.SchoolActivity;
 
-public class SchoolListActivity extends AppCompatActivity implements SchoolListView{
+public class SchoolListActivity extends AppCompatActivity implements SchoolListView, SchoolRecyclerViewAdapter.OnSchoolSelectedListener{
     private String mBorough;
 
     private SchoolListPresenter mPresenter;
@@ -86,6 +88,15 @@ public class SchoolListActivity extends AppCompatActivity implements SchoolListV
         GetSchoolListTask task = new GetSchoolListTask();
 
         task.execute(mBorough);
+    }
+
+    @Override
+    public void startSchoolActivity(String schoolName) {
+        Intent intent = new Intent(this, SchoolActivity.class);
+
+        intent.putExtra("school", schoolName);
+
+        startActivity(intent);
     }
 
     private class GetSchoolListTask extends AsyncTask<String, Void, List<SchoolEntity>> {

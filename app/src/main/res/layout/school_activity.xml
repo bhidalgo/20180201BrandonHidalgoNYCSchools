@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="school"
+            type="hidalgo.brandon.a20180201_brandonhidalgo_nycschools.dal.room.SchoolEntity"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/mathLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:labelFor="@+id/mathTextView"
+            android:text="Math: "
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@id/mathTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{school.mathScore}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/mathLabel"
+            app:layout_constraintStart_toEndOf="@+id/mathLabel"
+            app:layout_constraintTop_toTopOf="@+id/mathLabel" />
+
+        <TextView
+            android:id="@+id/writingLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:labelFor="@+id/writingTextView"
+            android:text="Writing: "
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/readingLabel"
+            app:layout_constraintStart_toEndOf="@+id/mathLabel"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@id/writingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{school.writingScore}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/writingLabel"
+            app:layout_constraintStart_toEndOf="@+id/writingLabel"
+            app:layout_constraintTop_toTopOf="@+id/writingLabel" />
+
+        <TextView
+            android:id="@+id/readingLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:labelFor="@+id/readingTextView"
+            android:text="Reading: "
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/readingTextView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@id/readingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@{school.readingScore}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/readingLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/readingLabel" />
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:textSize="14sp"
+            android:text="@{school.description}"
+            app:layout_constraintEnd_toStartOf="@+id/writingTextView"
+            app:layout_constraintStart_toStartOf="@+id/writingLabel"
+            app:layout_constraintTop_toBottomOf="@+id/writingLabel" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
