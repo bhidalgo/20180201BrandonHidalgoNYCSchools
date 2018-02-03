@@ -1,6 +1,5 @@
 package hidalgo.brandon.a20180201_brandonhidalgo_nycschools.school_list.model;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -85,8 +84,6 @@ public class SchoolListPresenterImpl implements SchoolListPresenter{
      * An AsyncTask to retrieve a list of schools from the database.
      */
     private static class GetSchoolListTask extends AsyncTask<String, Void, List<SchoolEntity>> {
-        ProgressDialog dialog;
-
         WeakReference<Context> contextReference;
 
         WeakReference<SchoolListView> viewReference;
@@ -103,14 +100,6 @@ public class SchoolListPresenterImpl implements SchoolListPresenter{
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            //Show a progress dialog
-            dialog = ProgressDialog.show(contextReference.get(), "Database Task", "Loading schools...");
-        }
-
-        @Override
         protected List<SchoolEntity> doInBackground(String... strings) {
             //Call the database for a list of schools
             return SchoolDatabase.getDatabase(contextReference.get())
@@ -120,9 +109,6 @@ public class SchoolListPresenterImpl implements SchoolListPresenter{
 
         @Override
         protected void onPostExecute(List<SchoolEntity> schoolEntities) {
-            //Dismiss the dialog
-            dialog.dismiss();
-
             //Show the list
             viewReference.get().displaySchoolList(schoolEntities);
         }
