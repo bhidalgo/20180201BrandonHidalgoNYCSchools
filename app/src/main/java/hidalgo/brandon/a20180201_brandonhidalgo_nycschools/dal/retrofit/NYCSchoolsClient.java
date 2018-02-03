@@ -6,6 +6,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 
+/**
+ * Our RESTFul client for obtaining data from the NYC Schools Databases
+ */
 public interface NYCSchoolsClient {
     @Headers("Content-Type: application/json")
     @GET("97mf-9njv.json")

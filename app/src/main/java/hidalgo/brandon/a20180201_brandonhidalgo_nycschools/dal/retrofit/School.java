@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * A POJO for abstracting Retrofit data for schools
  */
+@SuppressWarnings("unused")
 public class School implements Comparable<School>{
     @SerializedName("dbn")
     @Expose

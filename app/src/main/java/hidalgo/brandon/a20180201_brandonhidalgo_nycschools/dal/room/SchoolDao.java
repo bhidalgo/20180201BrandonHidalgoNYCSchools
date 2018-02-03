@@ -7,6 +7,9 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
+/**
+ * Our School Data access object which handles queries to the school database.
+ */
 @Dao
 public interface SchoolDao {
     @Query("SELECT * FROM schools WHERE borough = (:borough)")

@@ -5,6 +5,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+/**
+ * Our School Entity class which defines the relative schema of the School Room Persistence database
+ */
+@SuppressWarnings("unused")
 @Entity(tableName = "schools")
 public class SchoolEntity {
     @PrimaryKey
@@ -29,7 +33,7 @@ public class SchoolEntity {
     @ColumnInfo(name = "reading")
     private String readingScore;
 
-    public SchoolEntity(String databaseNumber, String name, String borough, String description, String mathScore, String writingScore, String readingScore) {
+    public SchoolEntity(@NonNull String databaseNumber, String name, String borough, String description, String mathScore, String writingScore, String readingScore) {
         this.databaseNumber = databaseNumber;
 
         this.name = name;
@@ -46,7 +50,7 @@ public class SchoolEntity {
     }
 
     @NonNull
-    public String getDatabaseNumber() {
+    String getDatabaseNumber() {
         return databaseNumber;
     }
 
