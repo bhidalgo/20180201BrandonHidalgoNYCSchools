@@ -21,7 +21,7 @@ public class BoroughRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<Borough> mList;
 
-    private OnBoroughItemSelectedListener listener;
+    private OnBoroughItemSelectedListener mListener;
 
     /**
      * An interface for handling clicks of children view within the adapter
@@ -37,9 +37,9 @@ public class BoroughRecyclerViewAdapter extends RecyclerView.Adapter {
      * @param list    the list of Boroughs to display
      */
     BoroughRecyclerViewAdapter(Context context, List<Borough> list) {
-        //Initialize our listener
+        //Initialize our mListener
         try {
-            listener = (OnBoroughItemSelectedListener) context;
+            mListener = (OnBoroughItemSelectedListener) context;
         } catch (ClassCastException e) {
             Log.e("BoroughRVAdapter", "Context must implement OnBoroughItemSelectedListener");
         }
@@ -72,7 +72,7 @@ public class BoroughRecyclerViewAdapter extends RecyclerView.Adapter {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.receiveBoroughSelected(currentBorough.getBoroughName());
+                mListener.receiveBoroughSelected(currentBorough.getBoroughName());
             }
         });
 

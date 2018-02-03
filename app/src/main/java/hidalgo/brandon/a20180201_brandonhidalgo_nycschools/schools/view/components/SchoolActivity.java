@@ -15,7 +15,7 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.schools.view.SchoolVi
  * An Activity display a school's SAT scores and description
  */
 public class SchoolActivity extends AppCompatActivity implements SchoolView {
-    private SchoolActivityBinding binding;
+    private SchoolActivityBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class SchoolActivity extends AppCompatActivity implements SchoolView {
 
         String schoolName = getIntent().getStringExtra("school");
 
-        binding = DataBindingUtil.setContentView(this, R.layout.school_activity);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.school_activity);
 
         setTitle(R.string.school_title);
 
@@ -33,12 +33,12 @@ public class SchoolActivity extends AppCompatActivity implements SchoolView {
     }
 
     /**
-     * Sets the school parameter of the activity binding class.
+     * Sets the school parameter of the activity mBinding class.
      *
      * @param school the school to be displayed
      */
     @Override
     public void displaySchoolInfo(SchoolEntity school) {
-        binding.setSchool(school);
+        mBinding.setSchool(school);
     }
 }

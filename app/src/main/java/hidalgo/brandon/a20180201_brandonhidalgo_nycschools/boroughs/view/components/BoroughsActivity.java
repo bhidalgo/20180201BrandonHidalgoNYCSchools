@@ -21,7 +21,7 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.school_list.view.comp
  * An activity that displays a list of Boroughs
  */
 public class BoroughsActivity extends AppCompatActivity implements BoroughView, BoroughRecyclerViewAdapter.OnBoroughItemSelectedListener {
-    private BoroughPresenter presenter;
+    private BoroughPresenter mPresenter;
 
     private RecyclerView mRecyclerView;
 
@@ -29,7 +29,7 @@ public class BoroughsActivity extends AppCompatActivity implements BoroughView, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new BoroughPresenterImpl(this);
+        mPresenter = new BoroughPresenterImpl(this);
 
         BoroughsActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.boroughs_activity);
 
@@ -44,7 +44,7 @@ public class BoroughsActivity extends AppCompatActivity implements BoroughView, 
     protected void onStart() {
         super.onStart();
 
-        presenter.getBoroughs();
+        mPresenter.getBoroughs();
     }
 
     /**
@@ -83,6 +83,6 @@ public class BoroughsActivity extends AppCompatActivity implements BoroughView, 
      */
     @Override
     public void receiveBoroughSelected(String borough) {
-        presenter.loadBorough(borough);
+        mPresenter.loadBorough(borough);
     }
 }

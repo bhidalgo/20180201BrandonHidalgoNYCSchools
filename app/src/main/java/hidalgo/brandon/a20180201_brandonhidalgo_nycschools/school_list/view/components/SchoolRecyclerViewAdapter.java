@@ -16,7 +16,7 @@ import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.dal.room.SchoolEntity
 public class SchoolRecyclerViewAdapter extends RecyclerView.Adapter {
     private List<SchoolEntity> mList;
 
-    private OnSchoolSelectedListener listener;
+    private OnSchoolSelectedListener mListener;
 
     /**
      * An interface for listening to clicks on this adapter's children view
@@ -32,9 +32,9 @@ public class SchoolRecyclerViewAdapter extends RecyclerView.Adapter {
      * @param list    the data to be used by the adapter
      */
     SchoolRecyclerViewAdapter(Context context, List<SchoolEntity> list) {
-        //Try to initialize the listener
+        //Try to initialize the mListener
         try {
-            listener = (OnSchoolSelectedListener) context;
+            mListener = (OnSchoolSelectedListener) context;
         } catch (ClassCastException e) {
             Log.e("SchoolRVAdapter", "Context must implement OnSchoolSelectedListener");
         }
@@ -62,7 +62,7 @@ public class SchoolRecyclerViewAdapter extends RecyclerView.Adapter {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.startSchoolActivity(currentSchool.getName());
+                mListener.startSchoolActivity(currentSchool.getName());
             }
         });
 

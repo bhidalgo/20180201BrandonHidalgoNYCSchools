@@ -41,17 +41,17 @@ public class DataRetrievalActivity extends AppCompatActivity {
 
     private final String SHARED_PREF_KEY = "databases_populated";
 
-    private NYCSchoolsClient client;
+    private NYCSchoolsClient mClient;
 
-    private List<School> schoolList;
+    private List<School> mSchoolList;
 
-    private List<Scores> scoreList;
+    private List<Scores> mScoreList;
 
-    private TextView titleTextView;
+    private TextView mTitleTextView;
 
-    private TextView subtitleTextView;
+    private TextView mSubtitleTextView;
 
-    private ProgressBar progressBar;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +59,11 @@ public class DataRetrievalActivity extends AppCompatActivity {
 
         DataRetrievalActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.data_retrieval_activity);
 
-        titleTextView = binding.title;
+        mTitleTextView = binding.title;
 
-        subtitleTextView = binding.subtitle;
+        mSubtitleTextView = binding.subtitle;
 
-        progressBar = binding.progressBar;
+        mProgressBar = binding.progressBar;
 
         if (databaseLoaded())
             startNextActivity();
@@ -92,7 +92,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts the fetching process by creating our client, and enqueuing the first and last call to the NYC Schools Database
+     * Starts the fetching process by creating our mClient, and enqueuing the first and last call to the NYC Schools Database
      */
     private void startFetchingData(final Integer failureCount) {
         if(hasInternetConnection()) {
@@ -104,11 +104,11 @@ public class DataRetrievalActivity extends AppCompatActivity {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
-            //Get our client
-            client = retrofit.create(NYCSchoolsClient.class);
+            //Get our mClient
+            mClient = retrofit.create(NYCSchoolsClient.class);
 
             //Our first call is to get the schools data
-            Call<List<School>> schoolCall = client.getSchoolsData();
+            Call<List<School>> schoolCall = mClient.getSchoolsData();
 
             //Enqueue the first call
             schoolCall.enqueue(new Callback<List<School>>() {
@@ -116,11 +116,11 @@ public class DataRetrievalActivity extends AppCompatActivity {
                 public void onResponse(@NonNull Call<List<School>> call, @NonNull Response<List<School>> response) {
                     if (response.code() == 200) {
                         //Populate the list of schools
-                        schoolList = response.body();
+                        mSchoolList = response.body();
 
                         //Sort the school list
-                        if (schoolList != null)
-                            Collections.sort(schoolList);
+                        if (mSchoolList != null)
+                            Collections.sort(mSchoolList);
 
                         //Start the second and last call
                         getSchoolScores(0);
@@ -156,7 +156,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
     private void getSchoolScores(final Integer failureCount) {
         setStatusTextView("Getting SAT Scores Data", "", true);
         //Create the second call
-        Call<List<Scores>> scoresCall = client.getSchoolsScores();
+        Call<List<Scores>> scoresCall = mClient.getSchoolsScores();
 
         //Enqueue the second call
         scoresCall.enqueue(new Callback<List<Scores>>() {
@@ -164,11 +164,11 @@ public class DataRetrievalActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<List<Scores>> call, @NonNull Response<List<Scores>> response) {
                 if (response.code() == 200) {
                     //Finish populating the database with school scores
-                    scoreList = response.body();
+                    mScoreList = response.body();
 
                     //Sort the list to match the school list
-                    if (scoreList != null)
-                        Collections.sort(scoreList);
+                    if (mScoreList != null)
+                        Collections.sort(mScoreList);
 
                     loadDatabase();
 
@@ -211,8 +211,8 @@ public class DataRetrievalActivity extends AppCompatActivity {
         HashMap<String, Scores> scoresHashMap = new HashMap<>();
 
         //Traverse the school list
-        for (int i = 0; i < schoolList.size(); i++) {
-            School currentSchool = schoolList.get(i);
+        for (int i = 0; i < mSchoolList.size(); i++) {
+            School currentSchool = mSchoolList.get(i);
 
             //Find the current school's score
             Scores currentSchoolScores = null;
@@ -223,15 +223,15 @@ public class DataRetrievalActivity extends AppCompatActivity {
             } else {
                 //Traverse the score list, removing the current score with each step from the list since
                 //it will be stored in the HashMap for later use anyways
-                for (int j = 0; j < scoreList.size(); j++) {
-                    Scores currentScore = scoreList.get(j);
+                for (int j = 0; j < mScoreList.size(); j++) {
+                    Scores currentScore = mScoreList.get(j);
 
                     if (currentSchool.getSchoolDatabaseNumber().equals(currentScore.getSchoolDatabaseNumber())) {
                         //Set the current school score
                         currentSchoolScores = currentScore;
 
                         //Shrink the list
-                        scoreList.remove(currentScore);
+                        mScoreList.remove(currentScore);
 
                         break;
                     } else {
@@ -239,7 +239,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
                         scoresHashMap.put(currentScore.getSchoolDatabaseNumber(), currentScore);
 
                         //Shrink the list
-                        scoreList.remove(currentScore);
+                        mScoreList.remove(currentScore);
                     }
                 }
             }
@@ -299,13 +299,13 @@ public class DataRetrievalActivity extends AppCompatActivity {
 
     private void setStatusTextView(String title, String subtitle, boolean inProgress) {
         if(!title.isEmpty())
-            titleTextView.setText(title);
+            mTitleTextView.setText(title);
 
         if(!subtitle.isEmpty())
-            subtitleTextView.setText(subtitle);
+            mSubtitleTextView.setText(subtitle);
 
         if(!inProgress)
-            progressBar.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
     }
 
     /**

@@ -4,17 +4,17 @@ package hidalgo.brandon.a20180201_brandonhidalgo_nycschools.boroughs;
  * A class containing borough information
  */
 public class Borough {
-    private String boroughName;
+    private String mBoroughName;
 
     public Borough(String boroughName) {
-        this.boroughName = boroughName;
+        mBoroughName = boroughName;
     }
 
     public String getBoroughName() {
-        return boroughName;
+        return mBoroughName;
     }
 
     public void setBoroughName(String boroughName) {
-        this.boroughName = boroughName;
+        mBoroughName = boroughName;
     }
 }
