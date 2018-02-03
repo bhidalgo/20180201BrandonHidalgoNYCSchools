@@ -32,6 +32,8 @@ public class BoroughsActivity extends AppCompatActivity implements BoroughView{
         binding.setActivity(this);
 
         mRecyclerView = binding.boroughRecyclerView;
+
+        setTitle(R.string.borough_title);
     }
 
     @Override

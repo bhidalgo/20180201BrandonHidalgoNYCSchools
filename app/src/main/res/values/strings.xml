@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">20180201-BrandonHidalgo-NYCSchools</string>
     <string name="borough_image_view_content_desc">photo of borough</string>
+    <string name="grabbing_data">Grabbing data...</string>
+    <string name="grabbing_data_subtitle">Don\'t worry, this will only happen once.</string>
+    <string name="borough_title">Choose a Borough</string>
 </resources>
