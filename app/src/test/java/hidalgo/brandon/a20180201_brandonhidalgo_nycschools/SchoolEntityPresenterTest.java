@@ -14,7 +14,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SchoolPresenterTest {
+public class SchoolEntityPresenterTest {
     @Mock
     private SchoolView view;
 
