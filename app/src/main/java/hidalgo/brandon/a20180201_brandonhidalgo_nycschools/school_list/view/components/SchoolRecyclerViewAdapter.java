@@ -11,29 +11,33 @@ import android.widget.TextView;
 import java.util.List;
 
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.R;
-import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.dal.retrofit.School;
 import hidalgo.brandon.a20180201_brandonhidalgo_nycschools.dal.room.SchoolEntity;
 
 public class SchoolRecyclerViewAdapter extends RecyclerView.Adapter {
-    private Context mContext;
-
     private List<SchoolEntity> mList;
 
     private OnSchoolSelectedListener listener;
 
+    /**
+     * An interface for listening to clicks on this adapter's children view
+     */
     public interface OnSchoolSelectedListener {
         void startSchoolActivity(String schoolName);
     }
 
-    public SchoolRecyclerViewAdapter(Context context, List<SchoolEntity> list) {
+    /**
+     * Constructor
+     * @param context the OnSchoolSelectedListener to be attached
+     * @param list the data to be used by the adapter
+     */
+    SchoolRecyclerViewAdapter(Context context, List<SchoolEntity> list) {
+        //Try to initialize the listener
         try {
             listener = (OnSchoolSelectedListener) context;
         }
         catch(ClassCastException e) {
             Log.e("SchoolRVAdapter", "Context must implement OnSchoolSelectedListener");
         }
-
-        mContext = context;
 
         mList = list;
     }
@@ -51,8 +55,10 @@ public class SchoolRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        //Get the current school by the position of this adapter
         final SchoolEntity currentSchool = mList.get(position);
 
+        //Set the on click for the child view
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +66,7 @@ public class SchoolRecyclerViewAdapter extends RecyclerView.Adapter {
             }
         });
 
+        //Bind the data to this child view
         TextView textView = holder.itemView.findViewById(R.id.schoolTextView);
 
         textView.setText(currentSchool.getName());
@@ -70,10 +77,13 @@ public class SchoolRecyclerViewAdapter extends RecyclerView.Adapter {
         return mList.size();
     }
 
+    /**
+     * A ViewHolder class for Schools
+     */
     private class SchoolViewHolder extends RecyclerView.ViewHolder {
         View mItemView;
 
-        public SchoolViewHolder(View itemView) {
+        SchoolViewHolder(View itemView) {
             super(itemView);
 
             mItemView = itemView;
