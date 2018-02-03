@@ -26,6 +26,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * An activity that fetches the relevant data from the internet and loads it into a local db for use.
+ */
 public class DataRetrievalActivity extends AppCompatActivity {
     private final String LOG_TAG = "Data Retrieval";
 
@@ -46,7 +49,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
         if(databaseLoaded())
             startNextActivity();
         else
-            getDataFromClient();
+            startFetchingData();
     }
 
     private boolean databaseLoaded() {
@@ -55,16 +58,23 @@ public class DataRetrievalActivity extends AppCompatActivity {
         return preference.getInt(SHARED_PREF_KEY, 0) == 1;
     }
 
-    private void getDataFromClient() {
+    /**
+     * Starts the fetching process by creating our client, and enqueuing the first and last call to the NYC Schools Database
+     */
+    private void startFetchingData() {
+        //Build Retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://data.cityofnewyork.us/resource/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        //Get our client
         client = retrofit.create(NYCSchoolsClient.class);
 
+        //Our first call is to get the schools data
         Call<List<School>> schoolCall = client.getSchoolsData();
 
+        //Enqueue the first call
         schoolCall.enqueue(new Callback<List<School>>() {
             @Override
             public void onResponse(@NonNull Call<List<School>> call, @NonNull Response<List<School>> response) {
@@ -76,9 +86,11 @@ public class DataRetrievalActivity extends AppCompatActivity {
                     if(schoolList != null)
                         Collections.sort(schoolList);
 
+                    //Start the second and last call
                     getSchoolScores();
                 }
                 else {
+                    //Show an error message
                     Toast.makeText(DataRetrievalActivity.this, "Failed to get SchoolEntity data :(", Toast.LENGTH_SHORT).show();
 
                     Log.e(LOG_TAG, "Something went wrong getting school data error code: " + response.code());
@@ -92,9 +104,14 @@ public class DataRetrievalActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Enqueues the second and last call to the NYC Schools Database
+     */
     private void getSchoolScores() {
+        //Create the second call
         Call<List<Scores>> scoresCall = client.getSchoolsScores();
 
+        //Enqueue the second call
         scoresCall.enqueue(new Callback<List<Scores>>() {
             @Override
             public void onResponse(@NonNull Call<List<Scores>> call, @NonNull Response<List<Scores>> response) {
@@ -102,6 +119,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
                     //Finish populating the database with school scores
                     scoreList = response.body();
 
+                    //Sort the list to match the school list
                     if(scoreList != null)
                         Collections.sort(scoreList);
 
@@ -112,6 +130,7 @@ public class DataRetrievalActivity extends AppCompatActivity {
                     startNextActivity();
                 }
                 else {
+                    //Show an error message
                     Toast.makeText(DataRetrievalActivity.this, "Failed to get SchoolEntity scores :(", Toast.LENGTH_SHORT).show();
 
                     Log.e(LOG_TAG, "Something went wrong getting school scores error code: " + response.code());
@@ -125,36 +144,56 @@ public class DataRetrievalActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Builds a list of SchoolEntities and passes it to our Room Persistent db.
+     */
     private void loadDatabase() {
+        //Initialize the list
         List<SchoolEntity> schoolsForDatabase = new ArrayList<>();
 
+        //This will make it easier to obtain scores by storing them in a map with their DBN as the key
         HashMap<String, Scores> scoresHashMap = new HashMap<>();
 
+        //Traverse the school list
         for(int i = 0; i < schoolList.size(); i++) {
             School currentSchool = schoolList.get(i);
 
+            //Find the current school's score
             Scores currentSchoolScores = null;
 
+            //If it's in the HashMap, no need to traverse the score list, just return from the map
             if(scoresHashMap.containsKey(currentSchool.getSchoolDatabaseNumber())) {
                 currentSchoolScores = scoresHashMap.get(currentSchool.getSchoolDatabaseNumber());
             }
             else {
+                //Traverse the score list, removing the current score with each step from the list since
+                //it will be stored in the HashMap for later use anyways
                 for(int j = 0; j < scoreList.size(); j++) {
                     Scores currentScore = scoreList.get(j);
 
                     if(currentSchool.getSchoolDatabaseNumber().equals(currentScore.getSchoolDatabaseNumber())) {
+                        //Set the current school score
                         currentSchoolScores = currentScore;
 
+                        //Shrink the list
                         scoreList.remove(currentScore);
 
                         break;
                     }
-                    else
+                    else {
+                        //Store the score in the HashMap for easier retrieval
                         scoresHashMap.put(currentScore.getSchoolDatabaseNumber(), currentScore);
+
+                        //Shrink the list
+                        scoreList.remove(currentScore);
+                    }
                 }
             }
+
+            //Create the new SchoolEntity
             SchoolEntity newSchoolEntity;
 
+            //Some schools did not report SAT scores in 2012.
             if(currentSchoolScores != null) {
                 newSchoolEntity = new SchoolEntity(
                         currentSchool.getSchoolDatabaseNumber(),
@@ -177,15 +216,24 @@ public class DataRetrievalActivity extends AppCompatActivity {
                         "N/A");
             }
 
+            //Add the Entity to the entity list
             schoolsForDatabase.add(newSchoolEntity);
         }
 
+        //Insert the entities into the db.
+        //It's ok to call the school DAO from the main thread since this is the only procedure
+        //and blocking the main thread momentarily won't hurt. This is not best practice though.
         List<Long> result = SchoolDatabase.getDatabase(this).schoolDao().insertSchools(schoolsForDatabase);
 
-        if(result.size() > 0)
-            Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
+        //Confirm whether the operation was successful
+        String resultString = result.size() > 0 ? "Successfully loaded the database!" : "Failed loading the database. Please try again.";
+
+        Toast.makeText(this, resultString, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Sets the shared preference to remember whether the database was loaded or not.
+     */
     private void setDatabaseLoaded() {
         SharedPreferences preference = getPreferences(MODE_PRIVATE);
 
@@ -196,6 +244,9 @@ public class DataRetrievalActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    /**
+     * Starts the Borough activity.
+     */
     private void startNextActivity() {
         Intent intent = new Intent(DataRetrievalActivity.this, BoroughsActivity.class);
 
